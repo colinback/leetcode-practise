@@ -32,6 +32,34 @@ public class Practise086 {
 	}
 	
 	public ListNode partition(ListNode head, int x) {
+		if (head == null) return null;
+		
+		ListNode lHead = new ListNode(-1);
+		ListNode rHead = new ListNode(-1);
+		ListNode lIter = lHead;
+		ListNode rIter = rHead;
+		
+		ListNode curr = head;
+		
+		while(curr != null) {
+			if (curr.val < x) {
+				lIter.next = curr;
+				lIter = curr;
+			} else {
+				rIter.next = curr;
+				rIter = curr;
+			}
+			curr = curr.next;
+		}
+		
+		rIter.next = null;
+		lIter.next = rHead.next;
+		
+		return lHead.next;
+	}
+	
+	/*
+	public ListNode partition(ListNode head, int x) {
         if (head == null) return null;
         
         ListNode dummy = new ListNode(-1);
@@ -64,6 +92,7 @@ public class Practise086 {
         }
         return dummy.next;
     }
+    */
 
 	private ListNode makeList(int[] arr) {
 		if (arr.length == 0)
