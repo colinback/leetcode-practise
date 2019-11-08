@@ -23,7 +23,7 @@ public class Practise001 {
 				}
 			}
 		}
-		throw new IllegalArgumentException("No tow sum solution");
+		throw new IllegalArgumentException("No two sum solution");
 	}
 	
 	public int[] towSum_hashmap(int[] nums, int target) throws IllegalArgumentException {
@@ -34,7 +34,7 @@ public class Practise001 {
 			else if (!map.containsKey(nums[i]))
 				map.put(nums[i], i);
 		}
-		throw new IllegalArgumentException("No tow sum solution");
+		throw new IllegalArgumentException("No two sum solution");
 	}
 	
 	public static void main(String[] args) {
