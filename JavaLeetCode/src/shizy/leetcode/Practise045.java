@@ -20,63 +20,54 @@ import java.util.Queue;
  * You can assume that you can always reach the last index.
  */
 public class Practise045 {
-	
+
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Practise045 p = new Practise045();
-		System.out.println(p.jump(new int[] {2, 3, 1, 1, 4}));
-		System.out.println(p.jump(new int[] {2, 2, 3, 1, 4, 1, 2, 1}));
-		System.out.println(p.jump(new int[] {0}));	
-		System.out.println(p.jump(new int[] {2, 1}));
-		System.out.println(p.jump(new int[] {1, 2}));
+		System.out.println(p.jump(new int[] { 2, 3, 1, 1, 4 }));
+		System.out.println(p.jump(new int[] { 2, 2, 3, 1, 4, 1, 2, 1 }));
+		System.out.println(p.jump(new int[] { 0 }));
+		System.out.println(p.jump(new int[] { 2, 1 }));
+		System.out.println(p.jump(new int[] { 1, 2 }));
+
+		// System.out.println(p.jump(new int[] { 3, 2, 1, 0, 4 }));
+		System.out.println(p.jump_dp(new int[] { 2, 3, 1, 1, 4 }));
+	}
+
+	// BFS
+	public int jump(int[] nums) {
+		if (nums.length <= 0)
+			return 0;
+
+		int jumps = 0;
+		int curr = 0;
+		int far = 0;
+
+		for(int i = 0; i < nums.length - 1; i++) {
+			far = Math.max(far, i + nums[i]);
+			if (i == curr) {
+				jumps++;
+				curr = far;
+			}
+		}
+
+		return jumps;
+	}
+
+	public int jump_dp(int[] nums) {
+		if (nums.length <= 0)
+			return 0;
 		
-		System.out.println(p.jump(new int[] {3,2,1,0,4}));
+		int[] steps = new int[nums.length];
+		for(int i = 1; i < nums.length; i++)
+			steps[i] = Integer.MAX_VALUE;
+
+		for(int i = 1; i < nums.length; i++) {
+			for(int j = 0; j < i; j++) {
+				if (j + nums[j] >= i && steps[j] + 1 < steps[i])
+					steps[i] = steps[j] + 1;
+			}
+		}
+
+		return steps[nums.length -1];
 	}
-	
-	public int jump(int[] nums) {
-		if (nums.length <= 0) return 0;
-	    
-	    int count = 0;
-	    int lo = 0;
-	    int hi = 0;
-	    int fast = 0;
-	            
-	    while(fast < nums.length - 1) {
-	    		for(int i = lo; i <= Math.min(hi, nums.length-1); i++) {
-	    			if (i + nums[i] > fast) {
-	    				fast = i + nums[i];
-	    			}
-	    		}
-	    		
-	    		count++;
-	    		lo = hi + 1;
-	    		hi = fast;
-	    }
-	    
-	    return count;
-	}
-	
-	/*
-	public int jump(int[] nums) {
-        if (nums.length <= 0) return 0;
-                
-        int steps = 0;
-        int pos = 0;
-        int max = 0;
-        
-        for(int i = 0; i < nums.length - 1; i++) {
-        		max = Math.max(max, i + nums[i]);
-        		
-        		if(pos == i) {
-        			steps++;
-        			pos = max;
-        		}
-        }
-        
-        if (max < nums.length - 1)
-        		return -1;
-        
-        return steps;
-    }
-	*/
 }

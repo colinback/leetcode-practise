@@ -31,27 +31,21 @@ import java.util.Arrays;
 public class Practise455 {
 	public static void main(String[] args) {
 		Practise455 p = new Practise455();
-		System.out.println(p.findContentChildren(new int[] {1, 2, 3}, new int[] {1,1}));
-		System.out.println(p.findContentChildren(new int[] {1, 2}, new int[] {1, 2, 3}));
+		System.out.println(p.findContentChildren(new int[] { 1, 2, 3 }, new int[] { 1, 1 }));
+		System.out.println(p.findContentChildren(new int[] { 1, 2 }, new int[] { 1, 2, 3 }));
+		System.out.println(p.findContentChildren(new int[] { 10, 9, 8, 7 }, new int[] { 5, 6, 7, 8 }));
 	}
-	
+
 	public int findContentChildren(int[] g, int[] s) {
-        int count = 0;
-        
-        Arrays.sort(g);
-        Arrays.sort(s);
-        
-        int i = 0, j = 0;
-        while(i < g.length && j < s.length) {
-        		while(j < s.length && s[j] < g[i])
-        			j++;
-        		
-        		if (j < s.length) {
-        			count++;
-        			j++; i++;
-        		}
-        }
-        
-        return count;
-    }
+		Arrays.sort(g);
+		Arrays.sort(s);
+
+		int i = 0;
+		for (int j = 0; i < g.length && j < s.length; j++) {
+			if (g[i] <= s[j])
+				i++;
+		}
+
+		return i;
+	}
 }

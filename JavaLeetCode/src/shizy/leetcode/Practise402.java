@@ -26,7 +26,6 @@ package shizy.leetcode;
 public class Practise402 {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Practise402 p = new Practise402();
 		System.out.println(p.removeKdigits("1432219", 3));
 		System.out.println(p.removeKdigits("10200", 1));
@@ -35,19 +34,20 @@ public class Practise402 {
 	}
 
 	public String removeKdigits(String num, int k) {
-        if (k >= num.length())
-        		return "0";
-        
-        StringBuffer sb = new StringBuffer(num);
-        for(int round = 0; round < k; round++) {
-        		int i = 0;
-        		while(i < sb.length() - 1 && sb.charAt(i) <= sb.charAt(i+1)) i++;
-        		
-        		sb.deleteCharAt(i);
-        		if(sb.charAt(0) == '0' && sb.length() > 1)
-        			sb.deleteCharAt(0);
-        }
-        
-        return sb.toString();
-    }
+		if (k >= num.length())
+			return "0";
+
+		StringBuffer sb = new StringBuffer(num);
+		for (int round = 0; round < k; round++) {
+			int i = 0;
+			while (i < sb.length() - 1 && sb.charAt(i) <= sb.charAt(i + 1))
+				i++;
+
+			sb.deleteCharAt(i);
+			if (sb.charAt(0) == '0' && sb.length() > 1)
+				sb.deleteCharAt(0);
+		}
+
+		return sb.toString();
+	}
 }

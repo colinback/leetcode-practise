@@ -14,24 +14,19 @@ package shizy.leetcode;
 public class Practise055 {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Practise055 p = new Practise055();
-		System.out.println(p.canJump(new int[] {2,7,3,1,4}));
-		System.out.println(p.canJump(new int[] {3,2,1,0,4}));
-		System.out.println(p.canJump(new int[] {0}));
+		System.out.println(p.canJump(new int[] { 2, 7, 3, 1, 4 }));
+		System.out.println(p.canJump(new int[] { 3, 2, 1, 0, 4 }));
+		System.out.println(p.canJump(new int[] { 0 }));
 	}
 
-	public boolean canJump(int[] nums) {		
-		int maxPos = 0;
-		
-        for(int i = 0; i < nums.length; i++) {
-        		if(maxPos >= i) {
-	        		maxPos = Math.max(maxPos, i + nums[i]);
-	        		if (maxPos >= nums.length - 1)
-	        			return true;
-        		}
-        }
-        
-        return false;
-    }
+	public boolean canJump(int[] nums) {
+		int lastPos = nums.length - 1;
+		for (int i = nums.length - 1; i >= 0; i--) {
+			if (i + nums[i] >= lastPos)
+				lastPos = i;
+		}
+
+		return lastPos == 0;
+	}
 }
