@@ -25,45 +25,73 @@ import java.util.List;
 public class Practise078 {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Practise078 p = new Practise078();
 		System.out.println(p.subsets(new int[] {1,3,2}));
 	}
-
-//    public List<List<Integer>> subsets(int[] nums) {
-//        List<List<Integer>> results = new ArrayList<>();
-//        results.add(new ArrayList<Integer>());
-//        
-//        for(int i = 0; i < nums.length; i++) {
-//        		List<List<Integer>> tmp = new ArrayList<>();
-//        		for(List<Integer> list: results) {
-//        			List<Integer> nl = new ArrayList<Integer>(list);
-//        			nl.add(nums[i]);
-//        			tmp.add(nl);
-//        		}
-//        		results.addAll(tmp);
-//        }
-//        
-//        return results;
-//    }
 	
+	// Backtracing
 	public List<List<Integer>> subsets(int[] nums) {
-		List<List<Integer>> results = new ArrayList<>();
-		backtrace(nums, results, new ArrayList<Integer>(), 0);
-		return results;
+		List<List<Integer>> outputs = new ArrayList<>();
+		backtrace(nums, 0, outputs, new ArrayList<Integer>());
+		return outputs;
 	}
 	
-	private void backtrace(int[] nums, List<List<Integer>> results, List<Integer> list, int start) {
-		results.add(new ArrayList<Integer>(list));
+	private void backtrace(int[] nums, int start, List<List<Integer>> lists, List<Integer> list) {
+		// clone list and add to lists
+		lists.add(new ArrayList<Integer>(list));
 		
 		for(int i = start; i < nums.length; i++) {
 			// pick number at index i
 			list.add(nums[i]);
 			
-			backtrace(nums, results, list, i + 1);
+			// use next integers to complete combination
+			backtrace(nums, i+1, lists, list);
 			
 			// trace back to skip number at index i
 			list.remove(list.size() - 1);
 		}
 	}
+
+	// Recursive
+	/* implementation 1
+	public List<List<Integer>> subsets(int[] nums) {
+		if (nums.length == 0) {
+			return new ArrayList<>(Arrays.asList(new ArrayList<Integer>()));
+		}
+
+		List<List<Integer>> results = new ArrayList<>();
+
+		for(List<Integer> l: subsets(Arrays.copyOf(nums, nums.length - 1))) {
+			results.add(l);
+
+			results.add(new ArrayList<Integer>(l) {{
+				add(nums[nums.length - 1]);
+			}});
+		}
+
+		return results;
+	}
+	*/
+
+	/* implementation 2
+	public List<List<Integer>> subsets(int[] nums) {
+		List<List<Integer>> output = new ArrayList<>();
+		output.add(new ArrayList<Integer>());
+
+		for(int num: nums) {
+			List<List<Integer>> newSubsets = new ArrayList<>();
+			for (List<Integer> curr: output) {
+				newSubsets.add(new ArrayList<Integer>(curr) {{
+					add(num);
+				}});
+			}
+
+			for (List<Integer> curr: newSubsets) {
+				output.add(curr);
+			}
+		}
+
+		return output;
+	}
+	*/
 }

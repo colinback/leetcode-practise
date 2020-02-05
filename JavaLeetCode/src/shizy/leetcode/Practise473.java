@@ -1,4 +1,8 @@
 package shizy.leetcode;
+import java.util.Arrays;
+import java.util.Comparator;
+
+import java.util.HashMap;
 
 /*
  * Remember the story of Little Match Girl? By now, you know exactly what matchsticks the little match girl has, 
@@ -27,41 +31,44 @@ package shizy.leetcode;
 public class Practise473 {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Practise473 p = new Practise473();
-		System.out.println(p.makesquare(new int[] {1, 1, 2, 2, 2}));
-		System.out.println(p.makesquare(new int[] {3, 3, 3, 3, 4}));
+		System.out.println(p.makesquare(new int[] { 1, 1, 2, 2, 2 }));
+		System.out.println(p.makesquare(new int[] { 3, 3, 3, 3, 4 }));
 	}
 
-	 public boolean makesquare(int[] nums) {
-		 if (nums == null || nums.length < 4) return false;
-		 
-		 int sum = 0;
-		 for(int i = 0; i < nums.length; i++) sum += nums[i];
-		 if (sum % 4 != 0)
-			 return false;
-		 
-		 return dfs(nums, new int[4], 0, sum/4);
-	 }
-	 
-	 private boolean dfs(int[] nums, int[] sums, int index, int target) {
-		 if (index == nums.length) {
-			 if (sums[0] == target && sums[1] == target && sums[2] == target)
-				 return true;
-			 
-			 return false;
-		 }
-		 
-		 for(int i = 0; i < 4; i++) {
-			 if (sums[i] + nums[index] > target)
-				 continue;
-			 
-			 sums[i] += nums[index];
-			 if (dfs(nums, sums, index + 1, target)) return true;
-			 
-			 sums[i] -= nums[index];
-		 }
-		 
-		 return false;
-	 }
+	// Backtrace
+	public boolean makesquare(int[] nums) {
+		if (nums == null || nums.length < 4)
+			return false;
+
+		int sum = 0;
+		for (int i = 0; i < nums.length; i++)
+			sum += nums[i];
+		if (sum % 4 != 0)
+			return false;
+
+		return backtrace(nums, 0, new int[4], sum / 4);
+	}
+
+	private boolean backtrace(int[] nums, int start, int[] sums, int target) {
+		if (start == nums.length) {
+			if (sums[0] == target && sums[1] == target && sums[2] == target)
+				return true;
+
+			return false;
+		}
+
+		for (int i = 0; i < 4; i++) {
+			if (sums[i] + nums[start] > target)
+				continue;
+
+			sums[i] += nums[start];
+			if (backtrace(nums, start + 1, sums, target))
+				return true;
+
+			sums[i] -= nums[start];
+		}
+
+		return false;
+	}
 }
