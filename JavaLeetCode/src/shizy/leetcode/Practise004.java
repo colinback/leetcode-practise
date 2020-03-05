@@ -1,9 +1,11 @@
 package shizy.leetcode;
 
+import java.util.Arrays;
+
 /*
  * There are two sorted arrays nums1 and nums2 of size m and n respectively.
- * 
- * Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).
+ * Find the median of the two sorted arrays. The overall run time complexity
+ * should be O(log (m+n)).
  * 
  * Example 1:
  * nums1 = [1, 3]
@@ -17,86 +19,169 @@ package shizy.leetcode;
  */
 public class Practise004 {
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Practise004 p = new Practise004();
-		
-		System.out.println(p.findMedianSortedArrays_bruteforce(new int[]{2}, new int[]{}));
-		System.out.println(p.findMedianSortedArrays_bruteforce(new int[]{1, 3}, new int[]{2}));
-		System.out.println(p.findMedianSortedArrays_bruteforce(new int[]{1}, new int[]{2, 3}));
-		System.out.println(p.findMedianSortedArrays_bruteforce(new int[]{1, 2}, new int[]{3, 4}));
-		System.out.println(p.findMedianSortedArrays_bruteforce(new int[]{1, 4}, new int[]{2, 5}));
-		System.out.println(p.findMedianSortedArrays_bruteforce(new int[]{1, 4, 9, 11}, new int[]{2, 5, 7, 8}));
-		
-		System.out.println(p.findMedianSortedArrays_recursive(new int[]{2}, new int[]{}));
-		System.out.println(p.findMedianSortedArrays_recursive(new int[]{1, 3}, new int[]{2}));
-		System.out.println(p.findMedianSortedArrays_recursive(new int[]{1}, new int[]{2, 3}));
-		System.out.println(p.findMedianSortedArrays_recursive(new int[]{1, 2}, new int[]{3, 4}));
-		System.out.println(p.findMedianSortedArrays_recursive(new int[]{1, 4}, new int[]{2, 5}));
-		System.out.println(p.findMedianSortedArrays_recursive(new int[]{1, 4, 9, 11}, new int[]{2, 5, 7, 8}));
+
+		System.out.println(p.findMedianSortedArrays(new int[] { 2 }, new int[] {}));
+		System.out.println(p.findMedianSortedArrays(new int[] { 1, 3 }, new int[] { 2 }));
+		System.out.println(p.findMedianSortedArrays(new int[] { 1 }, new int[] { 2, 3 }));
+		System.out.println(p.findMedianSortedArrays(new int[] { 1, 2 }, new int[] { 3, 4 }));
+		System.out.println(p.findMedianSortedArrays(new int[] { 1, 4 }, new int[] { 2, 5 }));
+		System.out.println(p.findMedianSortedArrays(new int[] { 1, 4, 9, 11 }, new int[] { 2, 5, 7, 8 }));
+		System.out.println(p.findMedianSortedArrays(new int[] { 3 }, new int[] { -2, -1 }));
 	}
-	
-	// run time complexity O((m+n)/2)
-	public double findMedianSortedArrays_recursive(int[] nums1, int[] nums2) {
+
+	// by find kth smallest value
+	public double findMedianSortedArrays(int[] nums1, int[] nums2) {
 		int m = nums1.length;
 		int n = nums2.length;
-		int left = (m + n + 1) /2;
-		int right = (m + n + 2) /2;
-		return (getkth(nums1, 0, nums2, 0, left) + getkth(nums1, 0, nums2, 0, right)) / 2.0;
+
+		if ((m + n) % 2 == 1)
+			return getKth(nums1, nums2, (m + n + 1) / 2);
+		else
+			return (getKth(nums1, nums2, (m + n + 1) / 2) + getKth(nums1, nums2, (m + n + 2) / 2)) / 2.0;
 	}
-	
-	private double getkth(int[] nums1, int lStart, int[] nums2, int rStart, int k) {
-		if (lStart > nums1.length - 1) return nums2[rStart + k - 1];
-		if (rStart > nums2.length - 1) return nums1[lStart + k - 1];
-		if (k == 1) return Math.min(nums1[lStart], nums2[rStart]);
-		
-		int lMid = Integer.MAX_VALUE;
-		int rMid = Integer.MAX_VALUE;
-		if (lStart + k/2 -1 < nums1.length)
-			lMid = nums1[lStart + k/2 -1];
-		if (rStart + k/2 -1 < nums2.length)
-			rMid = nums2[rStart + k/2 -1];
-		
-		if (lMid < rMid) 
-			return getkth(nums1, lStart + k/2, nums2, rStart, k - k/2); 
-		else 
-			return getkth(nums1, lStart, nums2, rStart + k/2, k - k/2);
-	}
-	
-	public double findMedianSortedArrays_bruteforce(int[] nums1, int[] nums2) {
+
+	private int getKth(int[] nums1, int[] nums2, int k) {
 		int m = nums1.length;
 		int n = nums2.length;
-		int medianNum = (m + n) /2 + 1;
-		int i = 0, j = 0, curr = 0;
-		int[] median = new int[medianNum];
-		
-		while(curr < medianNum) {
-			if (j >= n && i < m) {
-				median[curr] = nums1[i];
-				i++;
-			}
-			
-			if (i >= m && j < n) {
-				median[curr] = nums2[j];
-				j++;
-			}
-			
-			if (i < m && j < n) {
-				if(nums1[i] < nums2[j]) {
-					median[curr] = nums1[i];
-					i++;
-				} else {
-					median[curr] = nums2[j];
-					j++;
-				}
-			}
-							
-			curr++;
-		}
-		
-		if ((m + n) % 2 == 0) {
-			return (median[medianNum - 2] + median[medianNum - 1]) / 2.0;
+
+		assert (!(m == 0 && n == 0));
+
+		if (m == 0)
+			return nums2[k - 1];
+
+		if (n == 0)
+			return nums1[k - 1];
+
+		if (k == 1)
+			return Math.min(nums1[0], nums2[0]);
+
+		// nums1: 0, ..., i-1, i, ..., m-1 (i = k/2) 
+		// nums2: 0, ..., j-1, j, ..., n-1 (j = k/2) 
+		// or: 
+		// nums1: 0, ..., i-1 (i = m) 
+		// nums2: 0, ..., j-1, j, ..., n (j = k/2)
+		// or: 
+		// nums1: 0, ..., i-1, i, ..., m-1 (i = k/2) 
+		// nums2: 0, ..., j-1 (j = n)
+
+		int i = Math.min(m, k / 2);
+		int j = Math.min(n, k / 2);
+
+		if (nums2[j - 1] < nums1[i - 1]) {
+			// throw nums2[0, ..., j-1]
+			return getKth(nums1, Arrays.copyOfRange(nums2, j, n), k - j);
 		} else {
-			return median[medianNum -1];
+			// throw nums1[0, ..., i-1]
+			return getKth(Arrays.copyOfRange(nums1, i, m), nums2, k - i);
 		}
 	}
+
+	// better understanding
+	/*
+	public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+		int m = nums1.length;
+		int n = nums2.length;
+
+		// ensure len(nums1) <= len(nums2)
+		if (m > n)
+			return findMedianSortedArrays(nums2, nums1);
+
+		// nums1: 0, ..., i - 1, i, ..., m - 1
+		// nums2: 0, ..., j - 1, j, ..., n - 1
+		int lo = 0, hi = m;
+
+		// it's really difficult to deal with loop condition and edge values. For
+		// example, if we define: 
+		//		nums1: 0, ..., i, i + 1, ..., m - 1 
+		// 		nums2: 0, ..., j, j + 1, ..., n - 1
+		// it's not that easy to handle the loop
+
+		while (lo <= hi) {
+			int i = (lo + hi) / 2; // mid
+			int j = (m + n + 1) / 2 - i;
+
+			if (i > 0 && j < n && nums1[i - 1] > nums2[j]) // i is too large
+				hi = i - 1;
+			else if (j > 0 && i < m && nums2[j - 1] > nums1[i]) // i is too small
+				lo = i + 1;
+			else { // i is perfect
+				int maxLeft = 0, maxRight = 0;
+
+				// calculate maxLeft
+				if (i == 0)
+					maxLeft = nums2[j - 1];
+				else if (j == 0)
+					maxLeft = nums1[i - 1];
+				else
+					maxLeft = Math.max(nums1[i - 1], nums2[j - 1]);
+
+				// odd case
+				if ((m + n) % 2 == 1)
+					return maxLeft;
+
+				// calculate rightLeft
+				if (i == m)
+					maxRight = nums2[j];
+				else if (j == n)
+					maxRight = nums1[i];
+				else
+					maxRight = Math.min(nums1[i], nums2[j]);
+
+				// even case
+				return (maxLeft + maxRight) / 2.0;
+			}
+		}
+
+		return 0.0;
+	}
+	*/
+
+	// another bineary search version, still difficult to handle loop
+	/*
+	public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+		int m = nums1.length;
+		int n = nums2.length;
+
+		// make sure m <= n
+		if (m > n)
+			return findMedianSortedArrays(nums2, nums1);
+
+		//        lo                 hi = (m+n)/2 
+		// nums1: 0, ..., midM, ..., i, ..., m-1 
+		// nums2: 0, ..., midN, ..., ..., ..., ..., n-1
+		// or 
+		//        lo                      hi = m 
+		// nums1: 0, ..., midM, ..., m-1 (m) 
+		// nums2: 0, ..., midN, ..., ..., ..., ..., n-1
+
+		int k = (m + n - 1) / 2;
+		int lo = 0, hi = Math.min(m, k);
+
+		while (lo < hi) {
+			int midM = (lo + hi) / 2;
+			int midN = k - midM;
+
+			if (nums1[midM] < nums2[midN])
+				lo = midM + 1;
+			else
+				hi = midM;
+		}
+
+		// after binary search, we get these 4 numbers:
+		// nums1[lo-1], nums1[lo], nums2[k-lo], and nums2[k-lo+1]
+
+		// if (n+m) is odd, the median is the larger one between nums1[lo-1] and
+		// nums2[k-lo].
+		int a = Math.max(lo > 0 ? nums1[lo - 1] : Integer.MIN_VALUE, k - lo >= 0 ? nums2[k - lo] : Integer.MIN_VALUE);
+		if ((m + n) % 2 == 1)
+			return (double) a;
+
+		// if (n+m) is even, the median can be calculated by
+		// median = (max(nums1[lo-1], nums2[k-lo]) + min(nums1[lo], nums2[k-lo+1]) / 2.0
+		int b = Math.min(lo < m ? nums1[lo] : Integer.MAX_VALUE,
+				k - lo + 1 < n ? nums2[k - lo + 1] : Integer.MAX_VALUE);
+		return (a + b) / 2.0;
+	}
+	*/
 }
